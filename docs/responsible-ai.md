@@ -16,7 +16,8 @@ list and not revoked. Revoking a user blocks their next session without affectin
 - **MVP (local, operator only):** layer 1 only.
 - **Before any other user or any deployment (Phase 5):** layer 2 is required. This needs user
   identity (login) and an approved-users store. At first the operator records approvals the
-  participant gives; later the participant may get an admin page to approve or revoke users directly.
+  participant gives. **Decision:** the participant tells the operator, and the operator updates the
+  approved list. No participant-facing admin page is planned.
 
 ## Controls
 
@@ -73,8 +74,8 @@ interface ApprovedUser {
 | Item | Status |
 |---|---|
 | Written consent for voice use | ✅ Received (stored privately, not in repo) |
-| Public demonstration | ❓ To confirm |
-| Likeness (photo/video) for avatar | ❓ To confirm |
+| Public demonstration | ✅ Covered by written consent |
+| Likeness (photo/video) for avatar | ✅ Covered by written consent |
 | Provider voice verification (ElevenLabs PVC) | ⏳ Not yet completed |
 
 Until the PVC is trained and verified, development uses a built-in ElevenLabs voice.
