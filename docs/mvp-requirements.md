@@ -32,4 +32,6 @@ Claude-powered twin. It covers Phases 2–3. The avatar, database, and memory ar
 - Avatar or video (Phase 4)
 - Database, admin UI, multiple participants (Phase 5)
 - Long-term conversational memory
-- User accounts and authentication (we will revisit this before any public deployment)
+- User accounts and per-user access approval (Phase 5). **Required before anyone other than the
+  operator uses the app or it is deployed.** See "Two layers of permission" in
+  [responsible-ai.md](responsible-ai.md).
