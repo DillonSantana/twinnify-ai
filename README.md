@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Twinnify AI — Digital Twin AI
 
-## Getting Started
+AI-powered conversations with a **consenting** person's digital twin, built on an architecture that can be reused for any participant who gives consent.
 
-First, run the development server:
+> **Status:** Phase 1 (repository & architecture). There is no working conversation feature yet.
+> This README only describes what exists and has been verified. Planned features are labelled as planned.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What this is
+
+Digital Twin AI is a web application where a user can hold a real-time voice conversation with an
+AI representation of a real participant who has given documented consent. The twin speaks with an
+authorized synthetic voice, uses Anthropic Claude for its conversational responses, and is
+**always clearly disclosed as an AI simulation**. It never presents itself as the real person.
+
+## Architecture at a glance
+
+```
+Browser (Next.js UI) ──short HTTPS request──► Next.js route handler (our server)
+        │                                       - checks participant consent is active
+        │                                       - holds the ElevenLabs API key
+        │                                       - returns a short-lived conversation token
+        │
+        └──── WebRTC audio (direct) ────────► ElevenLabs Agent (managed)
+                                                speech-to-text → Claude → text-to-speech
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+See [docs/architecture.md](docs/architecture.md) for the full explanation.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend + server | Next.js (App Router), React, TypeScript | One project with server-side route handlers that keep API keys secret |
+| Styling | Tailwind CSS | Fast, consistent styling |
+| Voice pipeline | ElevenLabs Agents | Managed speech recognition, turn-taking, and synthesis |
+| Conversational model | Anthropic Claude, selected inside the ElevenLabs agent | Simplest supported integration |
+| Database | None yet | Added only when a requirement needs one (Phase 5) |
 
-## Learn More
+The reasons for each choice are recorded in [docs/decisions/](docs/decisions/).
 
-To learn more about Next.js, take a look at the following resources:
+## Getting started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Requires Node.js 20+.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+cp .env.example .env.local   # then fill in values (never commit .env.local)
+npm run dev
+```
 
-## Deploy on Vercel
+Open http://localhost:3000.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Other scripts: `npm run lint`, `npm run build`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [MVP requirements](docs/mvp-requirements.md)
+- [Responsible AI design](docs/responsible-ai.md)
+- [Risks & dependencies](docs/risks.md)
+- [Architecture decision records](docs/decisions/)
+- [Participant consent template](docs/consent/participant-consent-template.md)
+
+## Responsible AI
+
+This project uses a synthetic voice, and possibly a synthetic likeness, of a real person. The app
+enforces the following protections in code:
+
+- the server will not start a conversation unless consent is recorded as active,
+- the user sees a disclosure screen before the microphone turns on,
+- an AI badge stays visible throughout the conversation.
+
+Details are in [docs/responsible-ai.md](docs/responsible-ai.md).
+
+## Roadmap
+
+1. ✅ Repository & architecture
+2. Basic conversational AI
+3. Custom voice & persona
+4. Avatar integration
+5. Reusable participant architecture & consent management
+6. Performance, testing & deployment
+7. Portfolio presentation
+
+## Authorship
+
+This project is developed by Dillon Santana with AI assistance (Claude Code). AI-assisted
+contributions are noted in commit history.
